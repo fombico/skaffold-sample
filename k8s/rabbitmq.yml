@@ -1,0 +1,52 @@
+# RabbitMQ Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  labels:
+    app: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:management
+
+---
+
+# RabbitMQ Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 5672
+      name: rabbitmq
+
+---
+# Management Console
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-management
+spec:
+  selector:
+    app: rabbitmq
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 15672
+      nodePort: 30672
+      name: rabbitmq-management

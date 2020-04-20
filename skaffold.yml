@@ -1,0 +1,22 @@
+apiVersion: skaffold/v2beta1
+kind: Config
+metadata:
+  name: skaffold-sample
+deploy:
+  kubectl:
+    manifests:
+      - k8s/bff-app.yml
+      - k8s/central-app.yml
+      - k8s/mysql.yml
+      - k8s/rabbitmq.yml
+      - k8s/app-config.yml
+build:
+  artifacts:
+    - image: localhost:5000/com.fombico.bff
+      context: .
+      jib:
+        project: bff
+    - image: localhost:5000/com.fombico.central
+      context: .
+      jib:
+        project: central

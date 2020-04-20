@@ -1,0 +1,40 @@
+# BFF App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff-app
+  labels:
+    app: bff-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff-app
+  template:
+    metadata:
+      labels:
+        app: bff-app
+    spec:
+      containers:
+        - name: bff-app
+          image: localhost:5000/com.fombico.bff
+          env:
+            - name: SPRING_RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: spring.rabbitmq.host
+---
+# BFF Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-nodeport
+spec:
+  selector:
+    app: bff-app
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8080
+      nodePort: 32100

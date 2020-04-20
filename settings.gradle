@@ -1,0 +1,4 @@
+rootProject.name = 'skaffold-sample'
+
+include 'bff'
+include 'central'
